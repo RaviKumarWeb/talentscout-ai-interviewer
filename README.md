@@ -14,12 +14,15 @@ TalentScout AI is an intelligent screening chatbot developed for the fictional r
 ## 🏗️ Technical Details
 ### Architecture & Design Decisions
 * **Modular Adapter Pattern**: The system is split into `main.py` (UI), `utils.py` (Logic/API), and `prompts.py` (Instructions). This ensures the code is maintainable and scalable.
-* **Model-Agnostic Backend**: Implemented an LLM Adapter that allows switching between **Google Gemini 1.5 Flash** and **OpenAI GPT-4o** with a single configuration change.
+* **Model-Agnostic Backend**: Implemented an LLM Adapter that allows switching between **Google Gemini** and **OpenAI GPT** with a single configuration change in `utils.py`.
+* **Zero-Cost Implementation**: Developed using the **Google Gemini 1.5 Flash Free Tier**, making the application accessible for testing without incurring API costs.
 * **In-Memory State Management**: Utilizes Streamlit `session_state` to store candidate data during the session, ensuring no permanent data footprint is left behind.
+
+
 
 ### Libraries & Tools
 * **Streamlit**: For the clean, interactive frontend.
-* **Google Generative AI SDK**: Primary LLM provider.
+* **Google Generative AI SDK**: Primary LLM provider (Free Tier optimized).
 * **OpenAI SDK**: Support for GPT models and OpenRouter.
 * **Python-Dotenv**: For secure management of API keys.
 
@@ -27,6 +30,8 @@ TalentScout AI is an intelligent screening chatbot developed for the fictional r
 
 ## 🧠 Prompt Design
 The "brain" of the chatbot relies on a sophisticated dual-prompt strategy:
+
+
 
 1.  **The Interviewer Agent**: 
     * **Persona**: Senior Technical Recruiter.
@@ -63,11 +68,12 @@ To run TalentScout AI locally, follow these steps:
     ```
 
 4.  **Setup Environment Variables**:
-    Create a file named `.env` in the root folder and add your keys:
+    Create a file named `.env` in the root folder. **You must provide your own API keys to test the application**:
     ```env
-    GEMINI_API_KEY=your_key_here
-    OPENAI_API_KEY=your_key_here
+    GEMINI_API_KEY=your_gemini_key_here
+    OPENAI_API_KEY=your_openai_key_here
     ```
+    > **Note:** I used free Gemini API key at [Google AI Studio](https://aistudio.google.com/).
 
 5.  **Run the App**:
     ```bash
@@ -95,7 +101,7 @@ To run TalentScout AI locally, follow these steps:
 ## ⚠️ Challenges & Solutions
 * **Challenge**: LLMs often "hallucinate" or include conversational text when asked for JSON data.
     * **Solution**: Implemented a **JSON Response Healing** function that strips markdown markers and ensures valid parsing.
-* **Challenge**: Managing API Rate Limits.
-    * **Solution**: Integrated **Resource Caching** using `@st.cache_resource` to minimize redundant API initializations.
+* **Challenge**: Managing API Rate Limits on the Free Tier.
+    * **Solution**: Integrated **Resource Caching** using `@st.cache_resource` and error handling to ensure a smooth user experience even when limits are reached.
 * **Challenge**: Maintaining context across multiple questions.
     * **Solution**: Designed a rolling history window that passes the entire conversation context to the LLM for every turn.
