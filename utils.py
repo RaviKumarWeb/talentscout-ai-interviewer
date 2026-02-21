@@ -24,7 +24,7 @@ def _call_gemini(sys_instr, user_msg):
     try:
         genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
         # Using the latest 2026 stable identifier
-        model = genai.GenerativeModel("gemini-2.5-flash")
+        model = genai.GenerativeModel("gemini-2.5-flash-lite")
         response = model.generate_content(f"{sys_instr}\n\nUser: {user_msg}")
         return response.text
     except Exception as e:
